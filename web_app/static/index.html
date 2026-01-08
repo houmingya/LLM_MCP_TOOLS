@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能工具调度系统</title>
+    
+    <!-- 外部依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🤖 智能工具调度系统</h1>
+            <div class="upload-section">
+                <span class="document-list" id="docCount">文档: 0</span>
+                <input type="file" id="fileInput" accept=".doc,.docx" />
+                <button class="upload-btn" onclick="triggerFileUpload()">
+                    📄 上传文档
+                </button>
+                <button class="upload-btn" onclick="loadDocuments()">
+                    🔄 刷新
+                </button>
+                <button class="upload-btn" onclick="clearHistory()">
+                    🗑️ 清除历史
+                </button>
+                <div style="flex: 1;"></div>
+                <div style="border-left: 1px solid rgba(255,255,255,0.3); height: 30px; margin: 0 10px;"></div>
+                <label style="display: inline-flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="buildGraphCheck" checked style="margin-right: 5px; width: 16px; height: 16px; cursor: pointer;">
+                    <span style="color: white; font-size: 14px;">构建知识图谱</span>
+                </label>
+                <button class="upload-btn" onclick="window.open('/knowledge-graph-simple', '_blank')">
+                    🧠 知识图谱
+                </button>
+            </div>
+        </div>
+
+        <!-- 聊天容器 -->
+        <div class="chat-container" id="chatContainer">
+            <div class="message system">
+                <div class="avatar">💡</div>
+                <div class="message-content">
+                    <strong>欢迎使用智能工具调度系统！</strong><br><br>
+                    我可以帮你：<br>
+                    • 查询员工信息和数据库数据<br>
+                    • 搜索上传的文档内容<br>
+                    • 进行数学计算和统计分析<br>
+                    • 获取时间日期信息<br>
+                    • 查询天气等外部API<br><br>
+                    请随意提问，我会自动选择合适的工具来帮助你！
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-container">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="输入你的问题..." 
+                onkeypress="handleKeyPress(event)"
+            />
+            <button id="sendBtn" onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/message-handler.js"></script>
+    <script src="/static/js/chat.js"></script>
+    <script src="/static/js/file-upload.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
