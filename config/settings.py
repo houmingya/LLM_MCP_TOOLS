@@ -1,11 +1,16 @@
 """
 系统配置文件
 包含大模型、数据库、向量数据库等配置信息
+支持从环境变量读取敏感配置
 """
 
 import os
 from pathlib import Path
 from typing import Dict, Any
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv()
 
 # 项目根目录
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,18 +32,19 @@ KNOWLEDGE_GRAPH_DIR.mkdir(exist_ok=True)
 # 大模型配置
 # ========================
 class LLMConfig:
-    """大模型配置类"""
+    """大模型配置类 - 从环境变量读取"""
     
-    # API配置
-    API_KEY: str = "sk-e067cac27b07405ca9b77fd7e15e2687"
-    API_BASE: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    MODEL_NAME: str = "qwen-plus"
+    # API配置（从环境变量读取，无默认值以确保安全）
+    API_KEY: str = os.getenv("LLM_API_KEY", "")
+    API_BASE: str = os.getenv("LLM_API_BASE", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+    MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "qwen-plus")
+    
     # Embedding模型配置
-    EMBEDDING_MODEL: str = "text-embedding-v3"
+    EMBEDDING_MODEL: str = os.getenv("LLM_EMBEDDING_MODEL", "text-embedding-v3")
 
     # 模型参数
-    TEMPERATURE: float = 0.7
-    MAX_TOKENS: int = 2000
+    TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.7"))
+    MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "2000"))
     
     @classmethod
     def to_dict(cls) -> Dict[str, Any]:
@@ -56,14 +62,14 @@ class LLMConfig:
 # MySQL数据库配置
 # ========================
 class DatabaseConfig:
-    """MySQL数据库配置类"""
+    """MySQL数据库配置类 - 从环境变量读取"""
     
-    HOST: str = "103.239.152.247"
-    PORT: int = 3416
-    USER: str = "root"
-    PASSWORD: str = "jishu_2023"
-    DATABASE: str = "llmproduct1"
-    CHARSET: str = "utf8mb4"
+    HOST: str = os.getenv("DB_HOST", "localhost")
+    PORT: int = int(os.getenv("DB_PORT", "3306"))
+    USER: str = os.getenv("DB_USER", "root")
+    PASSWORD: str = os.getenv("DB_PASSWORD", "")
+    DATABASE: str = os.getenv("DB_DATABASE", "test_db")
+    CHARSET: str = os.getenv("DB_CHARSET", "utf8mb4")
     
     # 连接池配置
     POOL_SIZE: int = 5
@@ -107,17 +113,18 @@ class VectorDBConfig:
 # Web应用配置
 # ========================
 class WebConfig:
-    """Web应用配置类"""
+    """Web应用配置类 - 从环境变量读取"""
     
     # FastAPI配置
-    HOST: str = "0.0.0.0"
-    PORT: int = 8000
-    RELOAD: bool = True
+    HOST: str = os.getenv("WEB_HOST", "0.0.0.0")
+    PORT: int = int(os.getenv("WEB_PORT", "8000"))
+    RELOAD: bool = os.getenv("WEB_RELOAD", "true").lower() == "true"
     
     # CORS配置
     ALLOW_ORIGINS: list = ["*"]
     ALLOW_CREDENTIALS: bool = True
     ALLOW_METHODS: list = ["*"]
+    ALLOW_HEADERS: list = ["*"]
     ALLOW_HEADERS: list = ["*"]
     
     # WebSocket配置
@@ -128,27 +135,30 @@ class WebConfig:
 # MCP服务器配置
 # ========================
 class MCPConfig:
-    """MCP服务器配置类"""
+    """MCP服务器配置类 - 从环境变量读取"""
+    
+    HOST: str = os.getenv("MCP_HOST", "0.0.0.0")
+    PORT: int = int(os.getenv("MCP_PORT", "8001"))
     
     SERVER_NAME: str = "intelligent-tool-dispatcher"
     SERVER_VERSION: str = "1.0.0"
     
     # 日志配置
-    LOG_LEVEL: str = "INFO"
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
 
 # ========================
 # 工具配置
 # ========================
 class ToolConfig:
-    """工具配置类"""
+    """工具配置类 - 从环境变量读取"""
     
     # API工具配置
     REQUEST_TIMEOUT: int = 30
     USER_AGENT: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     
     # 天气API配置（可选）
-    WEATHER_API_KEY: str = ""  # 如果有天气API密钥，可以填写
+    WEATHER_API_KEY: str = os.getenv("WEATHER_API_KEY", "")
     WEATHER_API_URL: str = "https://api.openweathermap.org/data/2.5/weather"
     
     # 计算工具配置

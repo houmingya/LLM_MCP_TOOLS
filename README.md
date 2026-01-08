@@ -138,31 +138,57 @@ pip install -r requirements.txt
 
 ### 4. 配置环境变量
 
-复制 `.env.example` 为 `.env` 并填写配置：
+**重要：项目使用环境变量管理敏感配置，请勿直接修改代码中的配置！**
+
+复制环境变量模板：
 
 ```bash
 cp .env.example .env
 ```
 
-编辑 `.env` 文件：
+编辑 `.env` 文件，填入你的配置：
 
 ```ini
-# 大模型配置
-LLM_API_KEY=your_qwen_api_key
-LLM_API_BASE=https://dashscope.aliyuncs.com/compatible-mode/v1
-LLM_MODEL=qwen-plus
+# ========================
+# 大模型配置（必填）
+# ========================
+# 通义千问 API Key（必须配置）
+# 获取地址：https://dashscope.console.aliyun.com/apiKey
+LLM_API_KEY=your_qwen_api_key_here
 
-# 数据库配置（可选）
+# 模型名称（可选：qwen-plus, qwen-turbo, qwen-max）
+LLM_MODEL_NAME=qwen-plus
+
+# ========================
+# MySQL 数据库配置（可选）
+# ========================
+# 如果不使用数据库工具，可以不配置
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=test_db
+DB_PASSWORD=your_mysql_password_here
+DB_DATABASE=test_db
+
+# ========================
+# 服务端口配置
+# ========================
+WEB_PORT=8000
+MCP_PORT=8001
 ```
 
-或直接编辑 `config/settings.py`。
+**详细配置说明请查看：** [配置指南](docs/配置指南.md)
 
-### 5. 启动服务
+### 5. 验证配置
+
+运行配置测试：
+
+```bash
+python test_config.py
+```
+
+如果看到 "✅ 配置验证通过"，说明配置成功！
+
+### 6. 启动服务服务
 
 **方式一：一键启动（推荐）**
 
@@ -184,7 +210,7 @@ python run_mcp_server.py
 python run.py --mode webapp
 ```
 
-### 6. 访问应用
+### 7. 访问应用
 
 浏览器打开：**http://localhost:8000**
 
